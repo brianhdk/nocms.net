@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+	<title></title>
+	<style type="text/css">
+		body {
+			font-family: verdana;
+		}
+	</style>
+</head>
+<body>
+	<h1>noCMS.net: back end</h1>
+	
+	Name: <input type="text" id="name" />
+	Message: <input type="text" id="message" />
+	<button id="send">Send</button>
+	<div id="messages"></div>
+	
+	<script type="text/javascript" src="/nocms/assets/?file=Scripts/jquery-1.6.4.js"></script>
+	<script type="text/javascript" src="/nocms/assets/?file=Scripts/jquery.signalR-2.0.0.js"></script>
+	<script type="text/javascript" src="/nocms/signalr/js"></script>
+<script type="text/javascript">
+        $(function () {
+            // Declare a proxy to reference the hub. 
+            var chat = $.connection.chatHub;
+            // Create a function that the hub can call to broadcast messages.
+            chat.client.broadcastMessage = function (name, message) {
+                // Html encode display name and message. 
+                var encodedName = $('<div />').text(name).html();
+                var encodedMsg = $('<div />').text(message).html();
+                // Add the message to the page. 
+                $('#messages').append('<li><strong>' + encodedName + '</strong>:&nbsp;&nbsp;' + encodedMsg + '</li>');
+            };
+	        
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                $('#send').click(function () {
+                    // Call the Send method on the hub. 
+                    chat.server.send($('#name').val(), $('#message').val());
+                    // Clear text box and reset focus for next comment. 
+                    $('#message').val('').focus();
+                });
+            });
+        });
+    </script>
+</body>
+</html>
