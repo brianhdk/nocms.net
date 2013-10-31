@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace NoCms.Net.Infrastructure.Resources
 {
@@ -18,7 +19,16 @@ namespace NoCms.Net.Infrastructure.Resources
 
 			return 
 				Assembly.GetManifestResourceNames()
-					.ToDictionary(x => x.Substring(assemblyName.Length + 1), x => x, StringComparer.OrdinalIgnoreCase);
+					.ToDictionary(x => ParseName(x, assemblyName), x => x, StringComparer.OrdinalIgnoreCase);
+		}
+
+		private static string ParseName(string resourceName, string assemblyName)
+		{
+			string name = resourceName.Substring(assemblyName.Length + 1);
+
+			name = Regex.Replace(name, @"\._(?<Digit>\d)", ".${Digit}");
+
+			return name;
 		}
 
 		public Stream GetResourceStream(string file)
