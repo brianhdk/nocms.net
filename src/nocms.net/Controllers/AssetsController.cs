@@ -39,23 +39,22 @@ namespace nocms.net.Controllers
 		
 		public HttpResponseMessage Get(string file)
 		{
-			// todo: look into Request.CreateErrorResponse
 			if (String.IsNullOrWhiteSpace(file))
-				throw new HttpException((int) HttpStatusCode.BadRequest, "File is missing.");
+				return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "File is missing.");
 
 			if (!FileNameValidator.IsMatch(file))
-				throw new HttpException((int) HttpStatusCode.BadRequest, "File is invalid.");
+				return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "File is invalid.");
 
 			string extension = Path.GetExtension(file);
 
 			string mediaType;
 			if (!MediaTypes.TryGetValue(extension, out mediaType))
-				throw new HttpException((int) HttpStatusCode.BadRequest, "File type is not supported.");
+				return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "File type is not supported.");
 
-			var stream = ResourceProvider.GetResourceStream(file);
+			Stream stream = ResourceProvider.GetResourceStream(file);
 
 			if (stream == null)
-				throw new HttpException((int) HttpStatusCode.NotFound, "File not found.");
+				return Request.CreateErrorResponse(HttpStatusCode.NotFound, "File not found.");
 
 			var result = new HttpResponseMessage(HttpStatusCode.OK)
 			{
