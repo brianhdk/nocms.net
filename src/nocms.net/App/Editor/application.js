@@ -1,4 +1,9 @@
 ﻿$(function () {
+	
+	$.fn.editable.defaults.mode = 'inline';
+
+	$('#name').editable();
+
 	// Declare a proxy to reference the hub. 
 	var chat = $.connection.chatHub;
 	// Create a function that the hub can call to broadcast messages.
@@ -12,7 +17,8 @@
 
 	// Start the connection.
 	$.connection.hub.start().done(function () {
-		$('#send').click(function () {
+		$('#send').click(function (e) {
+			e.preventDefault();
 			// Call the Send method on the hub. 
 			chat.server.send($('#name').val(), $('#message').val());
 			// Clear text box and reset focus for next comment. 

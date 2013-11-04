@@ -168,6 +168,9 @@
     <EmbeddedResource Include="Scripts\jquery-2.0.3.js" />
     <EmbeddedResource Include="Scripts\jquery-2.0.3.min.js" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="App\Editor\site.css" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
